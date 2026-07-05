@@ -1,0 +1,80 @@
+{
+  "event_type": "study_session.completed",
+  "schema_version": "1.0",
+  "user_id": "demo-user",
+  "session": {
+    "id": "session_2026_07_05_001",
+    "started_at": "2026-07-05T10:00:00Z",
+    "finished_at": "2026-07-05T10:30:00Z",
+    "hsk_level": "HSK2",
+    "score": {
+      "correct": 8,
+      "wrong": 3,
+      "percentage": 72.7
+    }
+  },
+  "errors": [
+    {
+      "concept": "了",
+      "category": "grammar",
+      "severity": "high",
+      "user_answer": "我昨天去学校了",
+      "expected_answer": "我昨天去了学校",
+      "explanation": "Error de colocación de 了 tras el verbo en una acción completada.",
+      "tags": ["HSK2", "grammar", "aspect", "了"]
+    },
+    {
+      "concept": "是",
+      "category": "verbs",
+      "severity": "medium",
+      "user_answer": "我是去学校",
+      "expected_answer": "我去学校",
+      "explanation": "Uso innecesario de 是 antes de un verbo de acción.",
+      "tags": ["HSK1", "verbs", "是"]
+    }
+  ],
+  "generated_material": {
+    "flashcards": [
+      {
+        "front": "¿Qué función tiene 了 en 我吃了饭?",
+        "back": "Marca que la acción se ha completado.",
+        "concept": "了",
+        "difficulty": "medium"
+      },
+      {
+        "front": "¿Se usa 是 antes de un verbo de acción como 去?",
+        "back": "No. 是 se usa para equivalencias o identificaciones, no para formar presente verbal.",
+        "concept": "是",
+        "difficulty": "easy"
+      }
+    ],
+    "exercises": [
+      {
+        "type": "fill_blank",
+        "question": "我昨天 ___ 学校。",
+        "answer": "去了",
+        "concept": "了"
+      },
+      {
+        "type": "sentence_correction",
+        "question": "Corrige la frase: 我是去学校",
+        "answer": "我去学校",
+        "concept": "是"
+      }
+    ],
+    "mini_test": [
+      {
+        "type": "multiple_choice",
+        "question": "Elige la frase correcta.",
+        "options": ["我了吃饭", "我吃了饭", "我吃饭昨天了"],
+        "correct_answer": "我吃了饭",
+        "concept": "了"
+      }
+    ]
+  },
+  "gamification": {
+    "penalty_amount_eur": 1.5,
+    "penalty_mode": "simulated_ledger",
+    "release_condition": "HSK2_CERTIFICATION_APPROVED"
+  }
+}
