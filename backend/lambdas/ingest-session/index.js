@@ -80,16 +80,18 @@ function validateStudySessionEvent(event) {
         validationErrors.push(`Missing field: errors[${index}].hsk_level`);
       }
 
-      if (!studyError.severity) {
-        validationErrors.push(`Missing field: errors[${index}].severity`);
+      if (!studyError.review_priority) {
+        validationErrors.push(
+          `Missing field: errors[${index}].review_priority`
+        );
       }
 
       if (
-        studyError.severity &&
-        !["low", "medium", "high", "critical"].includes(studyError.severity)
+        studyError.review_priority &&
+        !["low", "medium", "high"].includes(studyError.review_priority)
       ) {
         validationErrors.push(
-          `Invalid severity in errors[${index}]. Expected: low, medium, high or critical`
+          `Invalid review_priority in errors[${index}]. Expected: low, medium or high`
         );
       }
 
@@ -124,17 +126,16 @@ function validateStudySessionEvent(event) {
   return validationErrors;
 }
 
-function countErrorsBySeverity(studyErrors) {
+function countErrorsByReviewPriority(studyErrors) {
   const result = {
     low: 0,
     medium: 0,
-    high: 0,
-    critical: 0
+    high: 0
   };
 
   studyErrors.forEach((studyError) => {
-    if (result[studyError.severity] !== undefined) {
-      result[studyError.severity] += 1;
+    if (result[studyError.review_priority] !== undefined) {
+      result[studyError.review_priority] += 1;
     }
   });
 
@@ -153,7 +154,7 @@ function summarizeStudySession(event) {
     hskLevel: event.session.hsk_level,
     scorePercentage: event.session.score.percentage,
     totalErrors: studyErrors.length,
-    errorsBySeverity: countErrorsBySeverity(studyErrors),
+    errorsByReviewPriority: countErrorsByReviewPriority(studyErrors),
     totalFlashcards: flashcards.length,
     totalExercises: exercises.length,
     totalMiniTests: miniTests.length
@@ -181,16 +182,21 @@ function main() {
     console.log(`HSK Level: ${summary.hskLevel}`);
     console.log(`Score: ${summary.scorePercentage}%`);
     console.log(`Errors: ${summary.totalErrors}`);
-    console.log(`- Low severity: ${summary.errorsBySeverity.low}`);
-    console.log(`- Medium severity: ${summary.errorsBySeverity.medium}`);
-    console.log(`- High severity: ${summary.errorsBySeverity.high}`);
-    console.log(`- Critical severity: ${summary.errorsBySeverity.critical}`);
+    console.log(`- Low review priority: ${summary.errorsByReviewPriority.low}`);
+    console.log(
+      `- Medium review priority: ${summary.errorsByReviewPriority.medium}`
+    );
+    console.log(
+      `- High review priority: ${summary.errorsByReviewPriority.high}`
+    );
     console.log(`Flashcards: ${summary.totalFlashcards}`);
     console.log(`Exercises: ${summary.totalExercises}`);
     console.log(`Mini tests: ${summary.totalMiniTests}`);
     console.log("-----------------------------------");
-    console.log("Penalty amount is not imported from ChatGPT.");
-    console.log("It will be calculated later by ZhongwenLock using user settings.");
+    console.log("No penalty is created when importing a ChatGPT session.");
+    console.log(
+      "Penalties will be calculated later when the user fails review items inside ZhongwenLock."
+    );
   } catch (error) {
     console.error("Unexpected error while processing study session:");
     console.error(error.message);
