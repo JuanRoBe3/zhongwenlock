@@ -15,66 +15,71 @@
   },
   "errors": [
     {
-      "concept": "了",
+      "concept_id": "concept_le_particle",
+      "concept_label": "Aspect particle le",
       "category": "grammar",
+      "concept_type": "particle",
+      "hsk_level": "HSK2",
       "severity": "high",
-      "user_answer": "我昨天去学校了",
-      "expected_answer": "我昨天去了学校",
-      "explanation": "Error de colocación de 了 tras el verbo en una acción completada.",
-      "tags": ["HSK2", "grammar", "aspect", "了"]
+      "user_answer": "Incorrect sentence using le",
+      "expected_answer": "Corrected sentence using le",
+      "explanation": "The aspect particle le should be placed after the verb when marking a completed action.",
+      "tags": ["HSK2", "grammar", "aspect", "particle"]
     },
     {
-      "concept": "是",
+      "concept_id": "concept_shi_verb",
+      "concept_label": "Verb shi",
       "category": "verbs",
+      "concept_type": "verb",
+      "hsk_level": "HSK1",
       "severity": "medium",
-      "user_answer": "我是去学校",
-      "expected_answer": "我去学校",
-      "explanation": "Uso innecesario de 是 antes de un verbo de acción.",
-      "tags": ["HSK1", "verbs", "是"]
+      "user_answer": "Incorrect use of shi before an action verb",
+      "expected_answer": "Sentence without shi before the action verb",
+      "explanation": "The verb shi is used for identification or equivalence, not as a general present tense marker before action verbs.",
+      "tags": ["HSK1", "verbs", "sentence_structure"]
     }
   ],
   "generated_material": {
     "flashcards": [
       {
-        "front": "¿Qué función tiene 了 en 我吃了饭?",
-        "back": "Marca que la acción se ha completado.",
-        "concept": "了",
+        "concept_id": "concept_le_particle",
+        "front": "Where is the aspect particle le usually placed when marking a completed action?",
+        "back": "It is usually placed after the verb.",
         "difficulty": "medium"
       },
       {
-        "front": "¿Se usa 是 antes de un verbo de acción como 去?",
-        "back": "No. 是 se usa para equivalencias o identificaciones, no para formar presente verbal.",
-        "concept": "是",
+        "concept_id": "concept_shi_verb",
+        "front": "Should shi be used before every action verb?",
+        "back": "No. Shi is mainly used for identification or equivalence, not as a general tense marker.",
         "difficulty": "easy"
       }
     ],
     "exercises": [
       {
+        "concept_id": "concept_le_particle",
         "type": "fill_blank",
-        "question": "我昨天 ___ 学校。",
-        "answer": "去了",
-        "concept": "了"
+        "question": "Complete the sentence using the correct position for le.",
+        "answer": "The particle le should appear after the verb."
       },
       {
+        "concept_id": "concept_shi_verb",
         "type": "sentence_correction",
-        "question": "Corrige la frase: 我是去学校",
-        "answer": "我去学校",
-        "concept": "是"
+        "question": "Correct a sentence where shi is incorrectly used before an action verb.",
+        "answer": "Remove shi before the action verb."
       }
     ],
-    "mini_test": [
+    "mini_tests": [
       {
+        "concept_id": "concept_le_particle",
         "type": "multiple_choice",
-        "question": "Elige la frase correcta.",
-        "options": ["我了吃饭", "我吃了饭", "我吃饭昨天了"],
-        "correct_answer": "我吃了饭",
-        "concept": "了"
+        "question": "Which option correctly explains the use of le?",
+        "options": [
+          "It marks completed action after the verb.",
+          "It always appears before the subject.",
+          "It is used before every noun."
+        ],
+        "correct_answer": "It marks completed action after the verb."
       }
     ]
-  },
-  "gamification": {
-    "penalty_amount_eur": 1.5,
-    "penalty_mode": "simulated_ledger",
-    "release_condition": "HSK2_CERTIFICATION_APPROVED"
   }
 }
