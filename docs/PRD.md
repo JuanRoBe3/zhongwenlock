@@ -4,7 +4,9 @@
 
 ZhongwenLock is an adaptive learning platform for beginner Chinese learners preparing for HSK1 and HSK2.
 
-The product transforms study sessions with ChatGPT into structured learning events, flashcards, exercises, progress analytics and a simulated financial commitment ledger.
+The product transforms study sessions with ChatGPT into structured learning events, concept tracking, flashcards, exercises, progress analytics and a configurable simulated financial commitment ledger.
+
+The main goal is to help the learner understand which Chinese concepts are weak, repeated, expensive and worth reviewing next.
 
 ## 2. Problem
 
@@ -27,22 +29,29 @@ The first real user of the MVP is the project owner.
 The MVP creates a closed learning loop:
 
 1. The user studies Chinese with a Custom GPT tutor.
-2. ChatGPT generates a structured JSON event at the end of the session.
+2. ChatGPT generates a structured JSON event with detected errors, affected concepts and generated practice material.
 3. The user imports the JSON into the ZhongwenLock web app.
-4. AWS processes and stores the session data.
-5. The app displays flashcards, exercises, mini-tests, progress analytics and a simulated financial ledger.
+4. AWS processes and stores the learning data.
+5. ZhongwenLock updates concept mastery, review state, analytics and the simulated ledger.
+6. The app helps the user continue learning from the last pending state.
 
 ## 5. MVP Features
 
 The first version should include:
 
 - study session import;
-- error tracking;
+- error tracking by concept;
 - generated flashcards;
 - generated exercises;
 - mini-tests;
-- daily review;
+- resume learning from the last pending review state;
 - progress dashboard;
+- concept library by HSK level, category and concept type;
+- concept detail page with historical mistakes and corrections;
+- concept mastery tracking;
+- ranking of most frequent mistakes;
+- ranking of most expensive mistakes;
+- configurable simulated penalty values;
 - simulated financial ledger.
 
 ## 6. Out of Scope for MVP
@@ -60,10 +69,14 @@ The MVP will not include:
 Potential success metrics:
 
 - number of study sessions imported;
+- number of concepts detected;
 - number of flashcards reviewed;
-- daily review completion rate;
+- review completion rate;
 - reduction of repeated mistakes;
-- mastery score by HSK concept;
+- mastery score by concept;
+- estimated HSK progress;
+- most frequent mistakes;
+- most expensive concepts;
 - simulated ledger balance.
 
 ## 8. Current Status

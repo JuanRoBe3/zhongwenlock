@@ -42,13 +42,17 @@ Acts as the Chinese HSK tutor.
 
 It helps the user study and generates a structured JSON event at the end of each session.
 
+The JSON represents observed learning events: detected mistakes, affected concepts, suggested severity, explanations and generated learning material.
+
+ChatGPT does not calculate authoritative mastery scores, accumulated progress or final penalty amounts. Those values are managed by ZhongwenLock.
+
 In the first MVP, ChatGPT does not send data directly to AWS. The user manually copies the JSON and imports it into the web app.
 
 ### Web App / PWA
 
 Acts as the main product interface.
 
-It allows the user to import study sessions, review flashcards, complete tests, see progress analytics and view the simulated financial ledger.
+It allows the user to import study sessions, review flashcards, complete exercises and tests, browse the concept library, see progress analytics, resume pending learning and view the simulated financial ledger.
 
 ### API Gateway
 
@@ -60,13 +64,13 @@ The web app sends requests to API Gateway, and API Gateway routes them to the co
 
 Acts as the serverless backend compute layer.
 
-Lambda functions process events such as importing a study session, generating the daily review, completing a review session or retrieving dashboard data.
+Lambda functions process events such as importing a study session, resuming pending review, completing a review session, retrieving dashboard data, calculating simulated penalties and updating concept mastery.
 
 ### DynamoDB
 
 Acts as the main database.
 
-It stores study sessions, mistakes, flashcards, exercises, tests, progress data and simulated ledger entries.
+It stores study sessions, concepts, error events, flashcards, exercises, mini-tests, review state, mastery scores, penalty configuration and simulated ledger entries.
 
 ### S3
 
@@ -103,3 +107,46 @@ The MVP intentionally avoids:
 - paid AI inference inside AWS.
 
 The reason is to keep the architecture small, serverless and cost-aware.
+
+---
+
+## 5. Responsibility Split
+
+ZhongwenLock separates observed learning events from long-term learning state.
+
+ChatGPT is responsible for:
+
+- detecting mistakes during a study session;
+- identifying affected concepts;
+- suggesting categories and severity;
+- generating flashcards, exercises and mini-tests.
+
+ZhongwenLock is responsible for:
+
+- validating imported JSON;
+- storing learning data;
+- calculating mastery scores;
+- calculating simulated penalties;
+- maintaining the simulated ledger;
+- deciding what the user should review next;
+- generating dashboard metrics.
+
+---
+
+## 6. Current Implementation Status
+
+The current implementation is still local.
+
+At this stage, the project includes:
+
+- product and architecture documentation;
+- an example study session JSON;
+- a local `ingest-session` backend parser;
+- validation of the imported study session structure.
+
+The next backend steps are:
+
+- transform the imported JSON into internal learning items;
+- define the DynamoDB physical design;
+- create the first API endpoint;
+- connect the web/PWA import screen to the backend.
