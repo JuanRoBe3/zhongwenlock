@@ -42,7 +42,7 @@ Acts as the Chinese HSK tutor.
 
 It helps the user study and generates a structured JSON event at the end of each session.
 
-The JSON represents observed learning events: detected mistakes, affected concepts, suggested severity, explanations and generated learning material.
+The JSON represents observed learning events: detected mistakes, affected concepts, suggested review priority, explanations and generated learning material.
 
 ChatGPT does not calculate authoritative mastery scores, accumulated progress or final penalty amounts. Those values are managed by ZhongwenLock.
 
@@ -118,15 +118,16 @@ ChatGPT is responsible for:
 
 - detecting mistakes during a study session;
 - identifying affected concepts;
-- suggesting categories and severity;
+- suggesting categories and review priority;
 - generating flashcards, exercises and mini-tests.
 
 ZhongwenLock is responsible for:
 
 - validating imported JSON;
 - storing learning data;
+- preparing review items;
 - calculating mastery scores;
-- calculating simulated penalties;
+- calculating simulated penalties after failed review answers;
 - maintaining the simulated ledger;
 - deciding what the user should review next;
 - generating dashboard metrics.

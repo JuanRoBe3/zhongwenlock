@@ -26,7 +26,7 @@ ChatGPT can provide:
 - detected errors;
 - affected concepts;
 - suggested categories;
-- suggested severity;
+- suggested review priority;
 - explanations;
 - generated flashcards;
 - generated exercises;
@@ -61,7 +61,7 @@ The payload includes:
 - score;
 - detected errors;
 - affected concepts;
-- suggested severity;
+- suggested review priority;
 - generated flashcards;
 - generated exercises;
 - generated mini-tests.
@@ -75,8 +75,12 @@ The backend should:
 - store detected errors;
 - create or update affected concepts;
 - store generated flashcards, exercises and mini-tests;
-- update concept mastery using internal rules;
-- calculate simulated penalties using user settings.
+- prepare review items using internal rules;
+- update the review state.
+
+Importing a ChatGPT session does not create a ledger penalty by itself.
+
+The ledger is updated later when the user fails review items inside ZhongwenLock.
 
 ### Success response
 
@@ -118,7 +122,8 @@ The backend should:
 - store answers;
 - update mastery scores;
 - update the next review state;
-- update the simulated ledger if mistakes have penalties.
+- calculate simulated penalties for failed review answers;
+- update the simulated ledger.
 
 ---
 
@@ -183,6 +188,8 @@ The ledger should show:
 - cost by category;
 - recent entries.
 
+Ledger entries are mainly created when the user fails review items inside ZhongwenLock.
+
 ---
 
 ## GET /settings/penalty-config
@@ -193,10 +200,11 @@ Example:
 
 ```json
 {
-  "low": 0.1,
-  "medium": 0.25,
-  "high": 0.5,
-  "critical": 1.0
+  "failed_flashcard_eur": 0.1,
+  "failed_exercise_eur": 0.25,
+  "failed_mini_test_eur": 0.5,
+  "repeated_concept_extra_eur": 0.25,
+  "max_per_review_session_eur": 3.0
 }
 ```
 
@@ -206,7 +214,7 @@ Example:
 
 Updates the user's simulated penalty configuration.
 
-This allows the user to decide how much each type of mistake costs.
+This allows the user to decide how much each failed review item costs.
 
 ---
 

@@ -32,8 +32,9 @@ ZhongwenLock creates a closed learning loop:
 2. At the end of the session, the tutor generates a structured JSON event with detected errors, affected concepts and generated practice material.
 3. The user imports that JSON into the ZhongwenLock web app.
 4. AWS processes and stores the learning data.
-5. ZhongwenLock updates concept mastery, review state, progress analytics and the simulated ledger.
+5. ZhongwenLock updates concept mastery, review state and progress analytics.
 6. The learner continues from the last pending review state.
+7. Failed review items inside the app update the configurable simulated ledger.
 
 ## Target Architecture
 

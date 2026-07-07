@@ -45,7 +45,7 @@ It contains what ChatGPT observed during a session:
 - detected errors;
 - affected concepts;
 - suggested categories;
-- suggested severity;
+- suggested review priority;
 - explanations;
 - generated flashcards;
 - generated exercises;
@@ -113,11 +113,13 @@ An error event should be linked to:
 
 - the imported session;
 - the affected concept;
-- the suggested severity;
+- the suggested review priority;
 - the correction;
 - the explanation.
 
 Error events are used to calculate repeated mistakes and weak concepts.
+
+They do not create ledger penalties directly.
 
 ---
 
@@ -129,6 +131,8 @@ Flashcards are linked to concepts.
 
 Reviewing a flashcard can increase or decrease the mastery score of its concept.
 
+A failed flashcard may create a simulated ledger entry.
+
 ---
 
 ### Exercise
@@ -139,6 +143,8 @@ Exercises are linked to concepts.
 
 They can be used during review or free practice.
 
+A failed exercise may create a simulated ledger entry.
+
 ---
 
 ### Mini Test
@@ -146,6 +152,8 @@ They can be used during review or free practice.
 Represents a short test generated from one or more concepts.
 
 Mini-tests can be used to check whether the user has improved on weak concepts.
+
+A failed mini-test may create a simulated ledger entry.
 
 ---
 
@@ -172,7 +180,9 @@ Represents one simulated financial penalty.
 
 The penalty amount is calculated by ZhongwenLock, not imported from ChatGPT.
 
-Ledger entries should allow the app to show:
+Ledger entries are mainly created when the user fails review items inside ZhongwenLock.
+
+They should allow the app to show:
 
 - total simulated balance;
 - cost by concept;
@@ -187,12 +197,13 @@ Represents the user's penalty settings.
 
 For example:
 
-- low severity mistake;
-- medium severity mistake;
-- high severity mistake;
-- critical severity mistake.
+- failed flashcard amount;
+- failed exercise amount;
+- failed mini-test amount;
+- extra amount for repeated concepts;
+- maximum amount per review session.
 
-The user should be able to decide how much each mistake type costs.
+The user should be able to decide how much each failed review item costs.
 
 ---
 
@@ -242,6 +253,7 @@ erDiagram
 
     REVIEW_SESSION ||--o{ ANSWER : contains
     ANSWER }o--|| CONCEPT : updates
+    ANSWER ||--o{ LEDGER_ENTRY : may_create
 ```
 
 These relationships are conceptual.
@@ -250,9 +262,9 @@ The final DynamoDB implementation may not look like a traditional relational dat
 
 ---
 
-## Data Access Needs
+## Product Needs Supported by the Data Model
 
-The data model should support these product needs:
+The following product needs influence the data model because they define what the app must be able to query, calculate or display.
 
 1. Show a general dashboard.
 2. Import a study session JSON.

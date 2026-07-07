@@ -8,6 +8,8 @@ The product transforms study sessions with ChatGPT into structured learning even
 
 The main goal is to help the learner understand which Chinese concepts are weak, repeated, expensive and worth reviewing next.
 
+---
+
 ## 2. Problem
 
 Beginner Chinese learners often struggle with:
@@ -18,11 +20,15 @@ Beginner Chinese learners often struggle with:
 - low consistency;
 - manual effort when creating flashcards or review material.
 
+---
+
 ## 3. Target User
 
 The initial target user is a self-directed HSK1/HSK2 learner who studies Chinese with AI tools and wants a structured way to track mistakes and review weak concepts.
 
 The first real user of the MVP is the project owner.
+
+---
 
 ## 4. MVP Solution
 
@@ -32,8 +38,11 @@ The MVP creates a closed learning loop:
 2. ChatGPT generates a structured JSON event with detected errors, affected concepts and generated practice material.
 3. The user imports the JSON into the ZhongwenLock web app.
 4. AWS processes and stores the learning data.
-5. ZhongwenLock updates concept mastery, review state, analytics and the simulated ledger.
+5. ZhongwenLock updates concept mastery, review state and progress analytics.
 6. The app helps the user continue learning from the last pending state.
+7. If the user fails review items inside the app, ZhongwenLock updates the simulated ledger.
+
+---
 
 ## 5. MVP Features
 
@@ -54,6 +63,8 @@ The first version should include:
 - configurable simulated penalty values;
 - simulated financial ledger.
 
+---
+
 ## 6. Out of Scope for MVP
 
 The MVP will not include:
@@ -63,6 +74,8 @@ The MVP will not include:
 - multi-user SaaS;
 - paid AI generation inside AWS;
 - real fintech integration.
+
+---
 
 ## 7. Success Metrics
 
@@ -78,6 +91,8 @@ Potential success metrics:
 - most frequent mistakes;
 - most expensive concepts;
 - simulated ledger balance.
+
+---
 
 ## 8. Current Status
 
