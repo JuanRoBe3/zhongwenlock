@@ -12,16 +12,33 @@ The main goals are:
 - avoid servers that remain running all day;
 - process study sessions only when events happen;
 - store learning progress in a structured way;
-- provide a web/PWA app as the main user interface.
+- provide a web/PWA app as the main user interface;
+- keep ZhongwenLock as the source of truth for long-term learning state.
 
 ---
 
-## 2. High-Level Architecture
+## 2. Delivery Horizons
+
+ZhongwenLock separates the implementation path from the target MVP experience.
+
+| Horizon | Purpose | Import model |
+|---|---|---|
+| Engineering Validation | Validate the contract and ingestion flow safely | Manual JSON paste/upload or local sample |
+| Target MVP | Deliver the first usable product loop | Custom GPT assisted/direct import |
+| Future Product | Improve continuity and automation | Authenticated automatic sync |
+
+Manual JSON import is not the target MVP user experience. It is used to reduce risk while validating the ingestion pipeline.
+
+---
+
+## 3. High-Level Architecture
+
+Target MVP:
 
 ```text
-Custom GPT / ChatGPT
+Custom GPT / ChatGPT Tutor
         ↓
-Web App / Import Screen
+Assisted / Direct Study Session Import
         ↓
 API Gateway
         ↓
@@ -32,49 +49,105 @@ DynamoDB
 Web App / PWA
 ```
 
+Engineering validation path:
+
+```text
+Sample JSON / Manual Import
+        ↓
+Web App, local script or backend parser
+        ↓
+Same validation and transformation logic
+        ↓
+Internal learning items
+```
+
+Both paths should reuse the same ZhongwenLock validation and transformation logic.
+
 ---
 
-## 3. Component Overview
+## 4. Component Overview
 
 ### Custom GPT / ChatGPT
 
 Acts as the Chinese HSK tutor.
 
-It helps the user study and generates a structured JSON event at the end of each session.
+It helps the user study and generates structured study session output at the end of each session.
 
-The JSON represents observed learning events: detected mistakes, affected concepts, suggested review priority, explanations and generated learning material.
+The structured output represents observed learning events:
 
-ChatGPT does not calculate authoritative mastery scores, accumulated progress or final penalty amounts. Those values are managed by ZhongwenLock.
+- detected mistakes;
+- affected concepts;
+- suggested review priority;
+- explanations;
+- generated flashcards;
+- generated exercises;
+- generated mini-tests.
 
-In the first MVP, ChatGPT does not send data directly to AWS. The user manually copies the JSON and imports it into the web app.
+ChatGPT does not calculate authoritative mastery scores, accumulated progress, review state, dashboard metrics or final penalty amounts.
+
+Those values are managed by ZhongwenLock.
+
+In the target MVP, the Custom GPT sends or hands off structured study session output to ZhongwenLock through an assisted/direct import flow.
 
 ### Web App / PWA
 
 Acts as the main product interface.
 
-It allows the user to import study sessions, review flashcards, complete exercises and tests, browse the concept library, see progress analytics, resume pending learning and view the simulated financial ledger.
+It allows the user to:
+
+- see imported study results;
+- review flashcards;
+- complete exercises and tests;
+- browse the concept library;
+- see progress analytics;
+- resume pending learning;
+- view the simulated financial ledger.
+
+During engineering validation, the web app may also provide a manual JSON import screen to test the ingestion pipeline.
 
 ### API Gateway
 
 Acts as the public HTTP entry point for the backend.
 
-The web app sends requests to API Gateway, and API Gateway routes them to the correct Lambda function.
+The target MVP import flow sends structured study session output to API Gateway.
+
+API Gateway routes requests to the correct Lambda function.
 
 ### AWS Lambda
 
 Acts as the serverless backend compute layer.
 
-Lambda functions process events such as importing a study session, resuming pending review, completing a review session, retrieving dashboard data, calculating simulated penalties and updating concept mastery.
+Lambda functions process events such as:
+
+- importing a study session;
+- validating structured study session output;
+- transforming external events into internal learning items;
+- resuming pending review;
+- completing a review session;
+- retrieving dashboard data;
+- calculating simulated penalties;
+- updating concept mastery.
 
 ### DynamoDB
 
 Acts as the main database.
 
-It stores study sessions, concepts, error events, flashcards, exercises, mini-tests, review state, mastery scores, penalty configuration and simulated ledger entries.
+It stores:
+
+- study sessions;
+- concepts;
+- error events;
+- flashcards;
+- exercises;
+- mini-tests;
+- review state;
+- mastery scores;
+- penalty configuration;
+- simulated ledger entries.
 
 ### S3
 
-May be used later to host the static web app and store optional exports such as JSON, CSV or Markdown files.
+May be used to host the static web app and store optional exports such as JSON, CSV or Markdown files.
 
 ### CloudWatch
 
@@ -94,7 +167,7 @@ Used to create cost alerts and reduce the risk of unexpected AWS charges.
 
 ---
 
-## 4. MVP Design Decisions
+## 5. MVP Design Decisions
 
 The MVP intentionally avoids:
 
@@ -104,13 +177,14 @@ The MVP intentionally avoids:
 - OpenSearch;
 - ECS/Fargate;
 - real banking integrations;
-- paid AI inference inside AWS.
+- paid AI inference inside AWS;
+- authenticated automatic session sync.
 
 The reason is to keep the architecture small, serverless and cost-aware.
 
 ---
 
-## 5. Responsibility Split
+## 6. Responsibility Split
 
 ZhongwenLock separates observed learning events from long-term learning state.
 
@@ -119,11 +193,14 @@ ChatGPT is responsible for:
 - detecting mistakes during a study session;
 - identifying affected concepts;
 - suggesting categories and review priority;
-- generating flashcards, exercises and mini-tests.
+- generating explanations;
+- generating flashcards, exercises and mini-tests;
+- preparing structured study session output.
 
 ZhongwenLock is responsible for:
 
-- validating imported JSON;
+- validating received study session data;
+- transforming external events into internal learning items;
 - storing learning data;
 - preparing review items;
 - calculating mastery scores;
@@ -132,9 +209,21 @@ ZhongwenLock is responsible for:
 - deciding what the user should review next;
 - generating dashboard metrics.
 
+The import mechanism may evolve, but this responsibility split does not change.
+
 ---
 
-## 6. Current Implementation Status
+## 7. Ledger Rule
+
+Importing a ChatGPT study session does not create a ledger penalty.
+
+The ledger is updated only when the user fails review items inside ZhongwenLock.
+
+This protects the user from being punished for mistakes detected during a study conversation and keeps penalties tied to in-app review attempts.
+
+---
+
+## 8. Current Implementation Status
 
 The current implementation is still local.
 
@@ -147,7 +236,7 @@ At this stage, the project includes:
 
 The next backend steps are:
 
-- transform the imported JSON into internal learning items;
+- transform the validated external study session event into internal learning items;
 - define the DynamoDB physical design;
 - create the first API endpoint;
-- connect the web/PWA import screen to the backend.
+- connect the target MVP import flow to the backend.
