@@ -2,63 +2,76 @@
 
 ## Purpose
 
-This roadmap defines the planned steps to complete the ZhongwenLock MVP.
+This roadmap defines the planned steps to complete the ZhongwenLock target MVP.
 
 The goal is to keep the project realistic, focused and incremental.
 
----
+ZhongwenLock separates:
 
-## MVP Goal
+- engineering validation work;
+- target MVP product experience;
+- future product evolution.
 
-The MVP should allow the user to:
-
-1. continue learning from a ChatGPT study session;
-2. extract concepts, errors and generated practice material;
-3. review weak concepts inside ZhongwenLock;
-4. update mastery based on review results;
-5. see a simple dashboard;
-6. update a simulated ledger when review items are failed.
+Manual JSON import is part of the engineering validation path, not the intended target MVP user experience.
 
 ---
 
-## Phase 1 - Study Session Import
+## Target MVP Goal
 
-Goal: prove that ZhongwenLock can receive and validate structured study data from ChatGPT.
+The target MVP should allow the user to:
+
+1. continue learning from a Custom GPT study session;
+2. receive or hand off structured study session output into ZhongwenLock;
+3. extract concepts, errors and generated practice material;
+4. review weak concepts inside ZhongwenLock;
+5. update mastery based on review results;
+6. see a simple dashboard;
+7. update a simulated ledger when review items are failed.
+
+---
+
+## Phase 0 - Engineering Validation
+
+Goal: validate the structured study session contract and ingestion pipeline before automating the Custom GPT import flow.
 
 Planned work:
 
-- keep the JSON import manual in the first MVP;
-- validate the study session payload;
+- create a representative study session JSON sample;
+- validate the study session payload locally;
 - reject invalid payloads with clear errors;
-- accept valid payloads for processing.
+- confirm that ChatGPT does not provide mastery, progress or ledger values;
+- confirm that importing a study session does not create ledger penalties.
 
 Reason:
 
-Manual import keeps the MVP simple and avoids debugging Custom GPT Actions too early.
+Manual validation reduces integration risk before implementing the target MVP import flow.
+
+It allows the project to debug the JSON contract, backend validation and transformation logic independently.
 
 ---
 
-## Phase 2 - Transform Imported Data
+## Phase 1 - Transform Imported Data
 
-Goal: transform the imported JSON into internal learning data.
+Goal: transform the validated external study session event into internal learning data.
 
 Planned work:
 
-- create session data;
+- create session trace data;
 - create concept data;
 - create error event data;
 - create flashcard data;
 - create exercise data;
 - create mini-test data;
-- prepare review state.
+- prepare pending review state;
+- keep ledger entries empty on import.
 
 Reason:
 
-The app should not depend directly on the raw ChatGPT JSON. ZhongwenLock needs its own internal representation.
+The app should not depend directly on raw Custom GPT output. ZhongwenLock needs its own internal representation and remains the source of truth.
 
 ---
 
-## Phase 3 - DynamoDB Design
+## Phase 2 - DynamoDB Design
 
 Goal: design how the internal learning data will be stored in DynamoDB.
 
@@ -68,7 +81,8 @@ Planned work:
 - define partition key and sort key structure;
 - define item types;
 - document access patterns;
-- decide whether raw imported JSON should also be stored.
+- decide whether raw imported JSON should also be stored;
+- include `import_source` for traceability.
 
 Reason:
 
@@ -76,9 +90,9 @@ The data model is concept-centered, so the DynamoDB design must support dashboar
 
 ---
 
-## Phase 4 - First API Endpoint
+## Phase 3 - First API Endpoint
 
-Goal: expose the import flow through an HTTP API.
+Goal: expose the ingestion flow through an HTTP API.
 
 Planned work:
 
@@ -86,28 +100,51 @@ Planned work:
 - connect API Gateway to Lambda;
 - return validation errors;
 - return success response;
-- store processed learning data.
+- store processed learning data;
+- support both engineering validation imports and target MVP Custom GPT assisted/direct imports through the same validation logic.
 
 Reason:
 
-This turns the local parser into the first real backend capability.
+This turns the local parser into the first real backend capability and prepares the system for the target MVP import flow.
 
 ---
 
-## Phase 5 - Web/PWA Import Screen
+## Phase 4 - Target MVP Import Flow
 
-Goal: create the first user-facing flow.
+Goal: implement the Custom GPT assisted/direct import path.
+
+Planned work:
+
+- define how the Custom GPT sends or hands off structured study session output;
+- ensure `POST /sessions` can receive target MVP imports;
+- preserve ZhongwenLock validation before storing data;
+- keep ZhongwenLock as the source of truth for mastery, review state, dashboard metrics and ledger logic;
+- show import results to the user inside the web/PWA.
+
+Reason:
+
+The target MVP should not rely on manual copy/paste as the normal user experience.
+
+Manual import is useful for engineering validation, but the product value improves when the Custom GPT can send or hand off structured output more directly.
+
+---
+
+## Phase 5 - Web/PWA Review Experience
+
+Goal: create the first user-facing review flow.
 
 Planned work:
 
 - create the React + Vite app;
-- create a JSON import screen;
-- send the JSON to `POST /sessions`;
-- show success and error messages.
+- show pending review items;
+- show generated flashcards;
+- show exercises and mini-tests;
+- allow the user to submit review answers;
+- display success and error states.
 
 Reason:
 
-The user needs a simple way to bring ChatGPT study data into ZhongwenLock during the MVP.
+The user needs a simple way to continue learning after the Custom GPT study session.
 
 ---
 
@@ -130,21 +167,22 @@ The product should help the learner understand what to review next.
 
 ---
 
-## Phase 7 - Review Flow
+## Phase 7 - Mastery and Review State
 
-Goal: allow the user to practice inside ZhongwenLock.
+Goal: allow the app to behave like an adaptive learning loop.
 
 Planned work:
 
-- show pending flashcards;
-- show exercises and mini-tests;
-- submit review answers in batches;
-- update mastery;
-- update review state.
+- update mastery from flashcard results;
+- update mastery from exercise answers;
+- update mastery from mini-test results;
+- maintain pending review state;
+- prioritize weak concepts;
+- support continuing from the last pending state.
 
 Reason:
 
-The app should become an adaptive learning loop, not only a viewer of imported data.
+ZhongwenLock should become more than a viewer of imported data. It should actively maintain learning state.
 
 ---
 
@@ -165,6 +203,8 @@ Reason:
 
 The ledger should reinforce consistency without involving real money.
 
+Ledger entries are created only from failed review attempts inside ZhongwenLock, not from ChatGPT import.
+
 ---
 
 ## Phase 9 - AWS Deployment
@@ -178,7 +218,8 @@ Planned work:
 - deploy DynamoDB;
 - host the frontend with S3;
 - add CloudWatch logs;
-- configure AWS Budgets.
+- configure AWS Budgets;
+- apply least-privilege IAM permissions.
 
 Reason:
 
@@ -188,10 +229,11 @@ The project should demonstrate Cloud Architect skills while avoiding unnecessary
 
 ## Future Backlog
 
-These ideas are outside the first MVP:
+These ideas are outside the target MVP:
 
-- direct Custom GPT Action integration;
-- authentication;
+- authenticated automatic session sync;
+- account linking;
+- multi-user authentication;
 - notifications;
 - advanced spaced repetition;
 - advanced HSK estimation;
