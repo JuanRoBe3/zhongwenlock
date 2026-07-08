@@ -2,6 +2,7 @@
   "event_type": "study_session.completed",
   "schema_version": "1.0",
   "user_id": "demo-user",
+  "import_source": "manual_validation",
   "session": {
     "id": "session_2026_07_05_001",
     "started_at": "2026-07-05T10:00:00Z",
@@ -16,69 +17,115 @@
   "errors": [
     {
       "concept_id": "concept_le_particle",
-      "concept_label": "Aspect particle le",
+      "concept_label": "Partícula 了",
       "category": "grammar",
       "concept_type": "particle",
       "hsk_level": "HSK2",
       "review_priority": "high",
-      "user_answer": "Incorrect sentence using le",
-      "expected_answer": "Corrected sentence using le",
-      "explanation": "The aspect particle le should be placed after the verb when marking a completed action.",
-      "tags": ["HSK2", "grammar", "aspect", "particle"]
+      "user_answer": "我吃饭了昨天。",
+      "expected_answer": "我昨天吃饭了。",
+      "explanation": "La partícula 了 suele marcar que una acción se ha completado o que hay un cambio de estado. En esta frase, 昨天 debe colocarse antes del verbo: 我昨天吃饭了。",
+      "tags": ["HSK2", "grammar", "了", "word-order"]
     },
     {
       "concept_id": "concept_shi_verb",
-      "concept_label": "Verb shi",
+      "concept_label": "Verbo 是",
       "category": "verbs",
       "concept_type": "verb",
       "hsk_level": "HSK1",
       "review_priority": "medium",
-      "user_answer": "Incorrect use of shi before an action verb",
-      "expected_answer": "Sentence without shi before the action verb",
-      "explanation": "The verb shi is used for identification or equivalence, not as a general present tense marker before action verbs.",
-      "tags": ["HSK1", "verbs", "sentence_structure"]
+      "user_answer": "我是学习中文。",
+      "expected_answer": "我学习中文。",
+      "explanation": "El verbo 是 se usa para identificar o establecer equivalencia, como en 我是学生. No se usa como marcador general de presente delante de verbos de acción. Para decir 'estudio chino', se dice 我学习中文。",
+      "tags": ["HSK1", "verbs", "是", "sentence-structure"]
+    },
+    {
+      "concept_id": "concept_measure_word_ge",
+      "concept_label": "Clasificador 个",
+      "category": "grammar",
+      "concept_type": "measure_word",
+      "hsk_level": "HSK1",
+      "review_priority": "medium",
+      "user_answer": "三学生",
+      "expected_answer": "三个学生",
+      "explanation": "En chino, normalmente no se dice directamente número + sustantivo. Entre el número y el sustantivo se usa un clasificador. Para 学生 se puede usar 个: 三个学生。",
+      "tags": ["HSK1", "grammar", "measure-word", "个"]
     }
   ],
   "generated_material": {
     "flashcards": [
       {
         "concept_id": "concept_le_particle",
-        "front": "Where is the aspect particle le usually placed when marking a completed action?",
-        "back": "It is usually placed after the verb.",
+        "front": "我昨天吃饭了。\nWǒ zuótiān chīfàn le.",
+        "back": "Ayer comí. / Ayer he comido.\n了 indica que la acción se completó.",
         "difficulty": "medium"
       },
       {
         "concept_id": "concept_shi_verb",
-        "front": "Should shi be used before every action verb?",
-        "back": "No. Shi is mainly used for identification or equivalence, not as a general tense marker.",
+        "front": "我是学生。\nWǒ shì xuésheng.",
+        "back": "Soy estudiante.\n是 se usa para identificación o equivalencia.",
+        "difficulty": "easy"
+      },
+      {
+        "concept_id": "concept_measure_word_ge",
+        "front": "三个学生\nSān ge xuésheng",
+        "back": "Tres estudiantes.\n个 funciona como clasificador entre el número y el sustantivo.",
         "difficulty": "easy"
       }
     ],
     "exercises": [
       {
         "concept_id": "concept_le_particle",
-        "type": "fill_blank",
-        "question": "Complete the sentence using the correct position for le.",
-        "answer": "The particle le should appear after the verb."
+        "type": "sentence_ordering",
+        "question": "Ordena correctamente la frase: 昨天 / 我 / 吃饭 / 了",
+        "answer": "我昨天吃饭了。"
       },
       {
         "concept_id": "concept_shi_verb",
         "type": "sentence_correction",
-        "question": "Correct a sentence where shi is incorrectly used before an action verb.",
-        "answer": "Remove shi before the action verb."
+        "question": "Corrige la frase: 我是学习中文。",
+        "answer": "我学习中文。"
+      },
+      {
+        "concept_id": "concept_measure_word_ge",
+        "type": "fill_blank",
+        "question": "Completa la frase con el clasificador correcto: 三___学生",
+        "answer": "个"
       }
     ],
     "mini_tests": [
       {
         "concept_id": "concept_le_particle",
         "type": "multiple_choice",
-        "question": "Which option correctly explains the use of le?",
+        "question": "¿Qué frase usa correctamente 了?",
         "options": [
-          "It marks completed action after the verb.",
-          "It always appears before the subject.",
-          "It is used before every noun."
+          "我昨天吃饭了。",
+          "我吃饭昨天了。",
+          "了我昨天吃饭。"
         ],
-        "correct_answer": "It marks completed action after the verb."
+        "correct_answer": "我昨天吃饭了。"
+      },
+      {
+        "concept_id": "concept_shi_verb",
+        "type": "multiple_choice",
+        "question": "¿Cuál es la frase correcta para decir 'estudio chino'?",
+        "options": [
+          "我是学习中文。",
+          "我学习中文。",
+          "我是中文学习。"
+        ],
+        "correct_answer": "我学习中文。"
+      },
+      {
+        "concept_id": "concept_measure_word_ge",
+        "type": "multiple_choice",
+        "question": "¿Cuál es la forma correcta de decir 'tres estudiantes'?",
+        "options": [
+          "三学生",
+          "三个学生",
+          "学生三个"
+        ],
+        "correct_answer": "三个学生"
       }
     ]
   }
